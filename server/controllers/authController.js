@@ -35,7 +35,7 @@ const login = async (req, res) => {
     token: 'demo-token-123',
     user: {
       id: 1,
-      name: 'Bhavika',
+      name: 'Diljot Singh',
       email: 'singhdiljot175@gmail.com',
     },
   })
