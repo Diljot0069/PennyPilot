@@ -1,0 +1,11 @@
+{
+  "name": "pennypilot",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "client": "npm --prefix client run dev",
+    "client:build": "npm --prefix client run build",
+    "server": "node server/server.js",
+    "server:dev": "node --watch server/server.js"
+  }
+}

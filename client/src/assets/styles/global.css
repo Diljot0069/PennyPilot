@@ -1,0 +1,9 @@
+:root {
+  --primary: #4f46e5;
+  --primary-soft: rgba(79, 70, 229, 0.12);
+  --success: #16a34a;
+  --danger: #dc2626;
+  --surface: #ffffff;
+  --muted: #64748b;
+  --border: #e2e8f0;
+}
