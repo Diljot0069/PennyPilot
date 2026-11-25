@@ -3,7 +3,7 @@ const getBudgets = async (req, res) => {
 }
 
 const createBudget = async (req, res) => {
-  res.status(201).json({ message: 'Budget created', budget: req.body })
+  res.status(201).json({ message: 'Budget created', budget: req.b })
 }
 
 module.exports = { getBudgets, createBudget}
