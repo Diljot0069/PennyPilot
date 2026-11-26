@@ -1,6 +1,2 @@
-export const getSummaryReport = async () => ({
-  income: 6200,
-  expenses: 3948,
-  net: 2252,
-  savings: 1980,
-})
+import api from './api'
+export const getSummaryReport = async (month) => api.get(`/reports${month ? `?month=${encodeURIComponent(month)}` : ''}`)

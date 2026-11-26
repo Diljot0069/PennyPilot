@@ -1,6 +1,4 @@
-const budgets = [
-  { category: 'Housing', used: 1025, limit: 1500 },
-  { category: 'Food', used: 620, limit: 700 },
-]
-
-export const getBudgets = async () => budgets
+import api from './api'
+export const getBudgets = async (month) => (await api.get(`/budgets${month ? `?month=${encodeURIComponent(month)}` : ''}`)).budgets
+export const createBudget = async (budget) => (await api.post('/budgets', budget)).budget
+export const deleteBudget = (id) => api.delete(`/budgets/${id}`)
