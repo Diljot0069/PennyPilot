@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react'
 import './Settings.css'
 
@@ -13,7 +14,6 @@ const getPreferences = () => {
   const defaults = {
     budgetAlerts: true,
     transactionReminders: true,
-    darkMode: false,
   }
 
   try {
@@ -26,7 +26,7 @@ const getPreferences = () => {
   }
 }
 
-const Settings = () => {
+const Settings = ({ isDarkMode, onThemeChange }) => {
   const [user] = useState(getStoredUser)
   const [preferences, setPreferences] = useState(getPreferences)
   const [saved, setSaved] = useState(false)
@@ -56,7 +56,7 @@ const Settings = () => {
     .toUpperCase()
 
   return (
-    <div className={`settings-page ${preferences.darkMode ? 'is-dark' : ''}`}>
+    <div className="settings-page">
       <header className="settings-heading">
         <div>
           <span className="settings-eyebrow">YOUR WORKSPACE</span>
@@ -73,7 +73,7 @@ const Settings = () => {
       <div className="settings-layout">
         <main className="settings-main">
 
-          {/* PROFILE */}
+          {/* PERSONAL INFORMATION */}
           <section className="settings-card">
             <div className="settings-card-heading">
               <div className="settings-icon profile-icon">01</div>
@@ -125,8 +125,11 @@ const Settings = () => {
                 <div className="option-icon">₹</div>
                 <div className="option-copy">
                   <strong>Budget alerts</strong>
-                  <span>Receive alerts when spending approaches your budget limit.</span>
+                  <span>
+                    Receive alerts when spending approaches your budget limit.
+                  </span>
                 </div>
+
                 <label className="switch">
                   <input
                     type="checkbox"
@@ -142,8 +145,11 @@ const Settings = () => {
                 <div className="option-icon">↻</div>
                 <div className="option-copy">
                   <strong>Transaction reminders</strong>
-                  <span>Keep track of recurring payments and financial entries.</span>
+                  <span>
+                    Keep track of recurring payments and financial entries.
+                  </span>
                 </div>
+
                 <label className="switch">
                   <input
                     type="checkbox"
@@ -151,7 +157,9 @@ const Settings = () => {
                     onChange={() => updatePreference('transactionReminders')}
                   />
                   <span className="switch-track" />
-                  <span className="sr-only">Enable transaction reminders</span>
+                  <span className="sr-only">
+                    Enable transaction reminders
+                  </span>
                 </label>
               </div>
             </div>
@@ -162,27 +170,32 @@ const Settings = () => {
             </p>
           </section>
 
-          {/* APPEARANCE */}
+          {/* GLOBAL APPEARANCE */}
           <section className="settings-card">
             <div className="settings-card-heading">
               <div className="settings-icon appearance-icon">03</div>
               <div>
                 <h2>Appearance</h2>
-                <p>Make PennyPilot comfortable to use</p>
+                <p>Customize the look of your entire workspace</p>
               </div>
             </div>
 
             <div className="settings-option">
               <div className="option-icon">◐</div>
+
               <div className="option-copy">
                 <strong>Dark appearance</strong>
-                <span>Use a darker color scheme on the Settings page.</span>
+                <span>
+                  Apply a premium dark theme across your entire PennyPilot
+                  application.
+                </span>
               </div>
+
               <label className="switch">
                 <input
                   type="checkbox"
-                  checked={preferences.darkMode}
-                  onChange={() => updatePreference('darkMode')}
+                  checked={isDarkMode}
+                  onChange={() => onThemeChange(!isDarkMode)}
                 />
                 <span className="switch-track" />
                 <span className="sr-only">Enable dark appearance</span>
@@ -196,16 +209,25 @@ const Settings = () => {
           <div className="settings-aside-card">
             <span className="aside-kicker">PENNYPILOT</span>
             <div className="aside-brand-mark">P.</div>
-            <h3>Better habits.<br />Better finances.</h3>
+
+            <h3>
+              Better habits.
+              <br />
+              Better finances.
+            </h3>
+
             <p>
               A clearer view of your money starts with understanding
               how you manage it.
             </p>
+
             <div className="aside-divider" />
+
             <div className="aside-detail">
               <span>WORKSPACE</span>
               <strong>Personal Finance</strong>
             </div>
+
             <div className="aside-detail">
               <span>CURRENCY</span>
               <strong>Indian Rupee · INR</strong>

@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 
 const currency = (value) =>
@@ -24,15 +25,28 @@ const Budgets = ({
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  const expenseCategories = categories.filter(c => c.type === 'expense')
+  const expenseCategories = categories.filter(
+    (c) => c.type === 'expense'
+  )
 
-  const totalLimit = budgets.reduce((sum, b) => sum + Number(b.limit || 0), 0)
-  const totalSpent = budgets.reduce((sum, b) => sum + Number(b.used || 0), 0)
+  const totalLimit = budgets.reduce(
+    (sum, b) => sum + Number(b.limit || 0), 0
+  )
+
+  const totalSpent = budgets.reduce(
+    (sum, b) => sum + Number(b.used || 0), 0
+  )
+
   const remaining = totalLimit - totalSpent
+
+  const usage = totalLimit > 0
+    ? Math.round((totalSpent / totalLimit) * 100)
+    : 0
 
   const handleMonthChange = async (value) => {
     setMonth(value)
     setError('')
+
     try {
       await onLoadBudgets(value)
     } catch (err) {
@@ -44,19 +58,27 @@ const Budgets = ({
     event.preventDefault()
     setError('')
 
-    if (!category || !Number.isFinite(Number(limit)) || Number(limit) <= 0) {
+    if (
+      !category ||
+      !Number.isFinite(Number(limit)) ||
+      Number(limit) <= 0
+    ) {
       setError('Choose a category and enter a budget greater than zero.')
       return
     }
 
     try {
       setSaving(true)
+
       await onAddBudget({
         category,
         limit: Number(limit),
         month,
-        color: expenseCategories.find(c => c.name === category)?.color || '#78965A',
+        color:
+          expenseCategories.find((c) => c.name === category)?.color ||
+          '#78966A',
       })
+
       setCategory('')
       setLimit('')
       setShowForm(false)
@@ -68,9 +90,10 @@ const Budgets = ({
   }
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this budget?')) return
+    if (!id || !window.confirm('Delete this budget?')) return
 
     setError('')
+
     try {
       await onDeleteBudget(id, month)
     } catch (err) {
@@ -79,58 +102,122 @@ const Budgets = ({
   }
 
   return (
-    <div className="page-section">
-      <header className="page-header budget-page-header">
+    <div className="page-section budgets-page">
+
+      <header className="budget-hero">
         <div>
-          <span className="eyebrow">Planning</span>
+          <span className="eyebrow">FINANCIAL PLANNING</span>
           <h1>Budgets</h1>
-          <p>Set spending limits and keep your finances on track.</p>
+          <p>
+            Take control of your spending, one category at a time.
+          </p>
         </div>
 
         <button
-          className="primary-button"
+          className="primary-button budget-create-button"
           type="button"
           onClick={() => {
             setError('')
             setShowForm(!showForm)
           }}
         >
-          {showForm ? 'Cancel' : '+ New budget'}
+          {showForm ? 'Close form' : '+ Create budget'}
         </button>
       </header>
 
-      <div className="budget-toolbar">
-        <label htmlFor="budget-month">Budget month</label>
+      <section className="budget-period-panel">
+        <div>
+          <span className="budget-section-label">REPORTING PERIOD</span>
+          <h3>Monthly overview</h3>
+        </div>
+
         <input
-          id="budget-month"
           type="month"
           value={month}
           onChange={(e) => handleMonthChange(e.target.value)}
+          aria-label="Select budget month"
         />
-      </div>
+      </section>
 
-      {error && <div className="form-error" role="alert">{error}</div>}
+      {error && (
+        <div className="form-error" role="alert">
+          {error}
+        </div>
+      )}
 
-      <div className="budget-summary-grid">
-        <div className="budget-summary-card">
-          <span>Total allocated</span>
+      <section className="budget-overview-grid">
+
+        <article className="budget-overview-card budget-total-card">
+          <span className="budget-card-label">TOTAL ALLOCATED</span>
           <strong>{currency(totalLimit)}</strong>
-        </div>
-        <div className="budget-summary-card">
-          <span>Total spent</span>
+          <span className="budget-card-caption">
+            Your monthly spending allowance
+          </span>
+          <span className="budget-card-symbol">₹</span>
+        </article>
+
+        <article className="budget-overview-card">
+          <span className="budget-card-label">TOTAL SPENT</span>
           <strong>{currency(totalSpent)}</strong>
-        </div>
-        <div className="budget-summary-card">
-          <span>Remaining</span>
+          <span className="budget-card-caption">
+            Money spent this month
+          </span>
+          <span className="budget-card-symbol">↗</span>
+        </article>
+
+        <article className="budget-overview-card">
+          <span className="budget-card-label">REMAINING BALANCE</span>
           <strong className={remaining < 0 ? 'budget-over' : ''}>
             {currency(remaining)}
           </strong>
+          <span className="budget-card-caption">
+            {remaining < 0
+              ? 'You have exceeded your budget'
+              : 'Available spending allowance'}
+          </span>
+          <span className="budget-card-symbol">◷</span>
+        </article>
+
+      </section>
+
+      <section className="budget-utilization-panel">
+        <div className="budget-utilization-heading">
+          <div>
+            <span className="budget-section-label">
+              SPENDING PERFORMANCE
+            </span>
+            <h3>Monthly utilization</h3>
+          </div>
+
+          <strong>{usage}%</strong>
         </div>
-      </div>
+
+        <div className="budget-utilization-track">
+          <div
+            className={`budget-utilization-fill ${
+              usage > 100 ? 'is-over' : ''
+            }`}
+            style={{ width: `${Math.min(usage, 100)}%` }}
+          />
+        </div>
+
+        <div className="budget-utilization-footer">
+          <span>{currency(totalSpent)} spent</span>
+          <span>{currency(totalLimit)} allocated</span>
+        </div>
+      </section>
 
       {showForm && (
-        <section className="panel budget-form-panel">
-          <h3>Create a budget</h3>
+        <section className="budget-create-panel">
+          <div className="budget-create-heading">
+            <div>
+              <span className="budget-section-label">NEW ALLOCATION</span>
+              <h2>Create a budget</h2>
+              <p>Set a monthly spending limit for a category.</p>
+            </div>
+            <span className="budget-form-icon">＋</span>
+          </div>
+
           <form className="budget-form" onSubmit={handleSubmit}>
             <label>
               Expense category
@@ -139,8 +226,8 @@ const Budgets = ({
                 onChange={(e) => setCategory(e.target.value)}
                 required
               >
-                <option value="">Choose category</option>
-                {expenseCategories.map(c => (
+                <option value="">Choose a category</option>
+                {expenseCategories.map((c) => (
                   <option key={c._id || c.name} value={c.name}>
                     {c.name}
                   </option>
@@ -154,100 +241,133 @@ const Budgets = ({
                 type="number"
                 min="0.01"
                 step="0.01"
-                placeholder="e.g. 5000"
+                placeholder="Enter amount"
                 value={limit}
                 onChange={(e) => setLimit(e.target.value)}
                 required
               />
             </label>
 
-            <button className="primary-button" type="submit" disabled={saving}>
-              {saving ? 'Saving…' : 'Save budget'}
+            <button
+              className="primary-button"
+              type="submit"
+              disabled={saving}
+            >
+              {saving ? 'Saving budget...' : 'Save budget'}
             </button>
           </form>
         </section>
       )}
 
-      {loading ? (
-        <p className="loading-note">Loading your budgets…</p>
-      ) : budgets.length === 0 ? (
-        <section className="panel budget-empty">
-          <h3>No budgets for this month</h3>
-          <p>Create a category budget to start tracking your spending.</p>
-          <button
-            className="primary-button"
-            type="button"
-            onClick={() => setShowForm(true)}
-          >
-            Create your first budget
-          </button>
-        </section>
-      ) : (
-        <section className="budget-list-section">
-          <div className="budget-list-heading">
+      <section className="budget-list-section">
+        <div className="budget-list-heading">
+          <div>
+            <span className="budget-section-label">YOUR ALLOCATIONS</span>
             <h2>Category budgets</h2>
-            <span>{budgets.length} active</span>
+            <p>Monitor how much you spend in each category.</p>
           </div>
 
+          <span className="budget-count">
+            {budgets.length} active
+          </span>
+        </div>
+
+        {loading ? (
+          <div className="budget-empty-state">
+            <p>Loading your budgets...</p>
+          </div>
+        ) : budgets.length === 0 ? (
+          <div className="budget-empty-state">
+            <span className="budget-empty-icon">₹</span>
+            <h3>No budgets yet</h3>
+            <p>
+              Create your first category budget to start managing
+              your monthly expenses.
+            </p>
+            <button
+              className="primary-button"
+              type="button"
+              onClick={() => setShowForm(true)}
+            >
+              Create your first budget
+            </button>
+          </div>
+        ) : (
           <div className="budget-grid">
             {budgets.map((budget) => {
               const used = Number(budget.used || 0)
               const cap = Number(budget.limit || 0)
-              const percentage = cap > 0 ? (used / cap) * 100 : 0
-              const progress = Math.min(percentage, 100)
+              const percentage = cap > 0
+                ? Math.round((used / cap) * 100)
+                : 0
               const overBudget = used > cap
+              const progress = Math.min(percentage, 100)
 
               return (
-                <article className="panel budget-item" key={budget._id || budget.category}>
+                <article
+                  className="budget-item-card"
+                  key={budget._id || budget.category}
+                >
                   <div className="budget-item-top">
                     <div className="budget-category-name">
                       <span
-                        className="category-dot"
-                        style={{ backgroundColor: budget.color || '#78965A' }}
-                      />
-                      <h3>{budget.category}</h3>
+                        className="budget-category-icon"
+                        style={{
+                          backgroundColor: `${budget.color || '#78966A'}20`,
+                          color: budget.color || '#78966A',
+                        }}
+                      >
+                        ₹
+                      </span>
+
+                      <div>
+                        <h3>{budget.category}</h3>
+                        <span>Monthly allocation</span>
+                      </div>
                     </div>
+
                     <button
                       className="budget-delete-button"
                       type="button"
                       onClick={() => handleDelete(budget._id)}
                       disabled={!budget._id}
-                      aria-label={`Delete ${budget.category} budget`}
                     >
                       Delete
                     </button>
                   </div>
 
-                  <div className="budget-amount-line">
+                  <div className="budget-item-amounts">
                     <strong>{currency(used)}</strong>
                     <span>of {currency(cap)}</span>
                   </div>
 
                   <div className="budget-progress-track">
                     <div
-                      className={`budget-progress-fill ${overBudget ? 'is-over' : ''}`}
+                      className={`budget-progress-fill ${
+                        overBudget ? 'is-over' : ''
+                      }`}
                       style={{ width: `${progress}%` }}
                     />
                   </div>
 
                   <div className="budget-item-footer">
                     <span className={overBudget ? 'budget-over' : ''}>
-                      {overBudget
-                        ? `${currency(used - cap)} over budget`
-                        : `${Math.round(percentage)}% used`}
+                      {percentage}% used
                     </span>
-                    <span>
+
+                    <strong className={overBudget ? 'budget-over' : ''}>
                       {overBudget
-                        ? 'Limit exceeded'
-                        : `${currency(cap - used)} left`}
-                    </span>
+                        ? `${currency(used - cap)} over limit`
+                        : `${currency(cap - used)} remaining`}
+                    </strong>
                   </div>
                 </article>
               )
             })}
           </div>
-        </section>
-      )}
+        )}
+      </section>
+
     </div>
   )
 }
