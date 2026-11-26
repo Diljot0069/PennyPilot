@@ -56,7 +56,7 @@ const Settings = ({ isDarkMode, onThemeChange }) => {
     .toUpperCase()
 
   return (
-    <div className="settings-page">
+    <div className={`settings-page ${isDarkMode ? "is-dark" : ""}`}>
       <header className="settings-heading">
         <div>
           <span className="settings-eyebrow">YOUR WORKSPACE</span>

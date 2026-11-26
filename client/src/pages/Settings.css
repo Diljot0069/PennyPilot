@@ -441,3 +441,104 @@
     display: none;
   }
 }
+
+
+/* PENNYPILOT SETTINGS COLOR FIX */
+
+/* LIGHT MODE */
+.settings-page {
+  background: #f5f6f1;
+  color: #1b2822;
+}
+
+.settings-page .settings-card {
+  background: #ffffff;
+  color: #1b2822;
+}
+
+.settings-page .settings-heading h1,
+.settings-page .settings-card-heading h2,
+.settings-page .profile-identity strong,
+.settings-page .settings-field strong,
+.settings-page .option-copy strong {
+  color: #1b2822;
+}
+
+.settings-page .settings-heading p,
+.settings-page .settings-card-heading p,
+.settings-page .profile-identity span,
+.settings-page .option-copy span,
+.settings-page .settings-helper {
+  color: #718078;
+}
+
+/* DARK MODE */
+.settings-page.is-dark {
+  background: #14231e;
+  color: #edf2eb;
+}
+
+.settings-page.is-dark .settings-card {
+  background: #1d3029;
+  color: #edf2eb;
+  border-color: #34483e;
+}
+
+.settings-page.is-dark .settings-heading h1,
+.settings-page.is-dark .settings-card-heading h2,
+.settings-page.is-dark .profile-identity strong,
+.settings-page.is-dark .settings-field strong,
+.settings-page.is-dark .option-copy strong {
+  color: #edf2eb;
+}
+
+.settings-page.is-dark .settings-heading p,
+.settings-page.is-dark .settings-card-heading p,
+.settings-page.is-dark .profile-identity span,
+.settings-page.is-dark .option-copy span,
+.settings-page.is-dark .settings-helper {
+  color: #a2b1a7;
+}
+
+.settings-page.is-dark .settings-field {
+  background: #192b24;
+  border-color: #34483e;
+}
+
+.settings-page.is-dark .profile-banner {
+  background: #293d33;
+  border-color: #34483e;
+}
+
+.settings-page.is-dark .settings-icon,
+.settings-page.is-dark .option-icon {
+  background: #293d33;
+  color: #d4ec73;
+}
+
+.settings-page.is-dark .profile-avatar {
+  background: #d4ec73;
+  color: #19251e;
+}
+
+.settings-page.is-dark .profile-badge {
+  color: #a2b1a7;
+  border-color: #34483e;
+}
+
+.settings-page.is-dark .settings-option {
+  border-color: #34483e;
+}
+
+.settings-page.is-dark .settings-aside-card {
+  background: #194438;
+  color: #ffffff;
+}
+
+.settings-page.is-dark .switch-track {
+  background: #45564b;
+}
+
+.settings-page.is-dark .switch input:checked + .switch-track {
+  background: #789b59;
+}
